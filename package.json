@@ -1,0 +1,52 @@
+{
+  "name": "kuttai",
+  "version": "1.0.0",
+  "description": "AI chatbot assistant for KTU students developed by EcoCee",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "kuttai": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "prepublishOnly": "npm test",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "ktu",
+    "ai",
+    "chatbot",
+    "student",
+    "assistant",
+    "education",
+    "notes",
+    "ecocee"
+  ],
+  "author": "EcoCee <info@ecocee.in>",
+  "license": "MIT",
+  "homepage": "https://github.com/cyberkutti-iedc/kuttai#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyberkutti-iedc/kuttai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cyberkutti-iedc/kuttai/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "index.js",
+    "chatbot.js",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.1",
+    "node-fetch": "^2.7.0",
+    "node-llama-cpp": "^3.12.1",
+    "open": "^8.4.2"
+  }
+}
