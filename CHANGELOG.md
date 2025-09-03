@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Upcoming features, bug fixes, and improvements.
 
 ---
+
+## [1.1.0] - 2025-09-03
+### Added
+- Streaming output functionality for real-time model responses  
+- Improved animations and UI responsiveness  
+- Tokenizer fixes for better input handling  
+- GPU layer auto-detection for optimized computation
+
+### Changed
+- Minor version bump: backward compatible with existing functionality
+
+---
+
 ## [1.0.2] - 2025-09-03
 ### Added
 - **funding.json** to allow community support via UPI  
@@ -21,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [1.0.2] - 2025-09-03
+## [1.0.1] - 2025-09-03
 ### Added
 - **CLA.md** (Contributor License Agreement)  
 - **CODE_OF_CONDUCT.md** for community guidelines  
@@ -54,4 +67,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [0.0.0] - 2025-08-25
 ### Started
 - Project initialized under **EcoCee**  
-- Repo created at [cyberkutti-iedc/kuttai](https://github.com/cyberkutti-iedc/kuttai)  
+- Repo created at [cyberkutti-iedc/kuttai](https://github.com/cyberkutti-iedc/kuttai)

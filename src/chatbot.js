@@ -20,28 +20,28 @@ class CLIChatbot {
         this.context = null;
         this.session = null;
         this.rl = null;
-        
+
         // Determine platform-specific model directory
         this.modelsDir = this.getModelsDirectory();
-        
+
         // Initialize services
         this.webScraper = new WebScraper();
         this.commandHandler = new CommandHandler(this.webScraper);
         this.uiHelper = new UIHelper();
         this.userData = this.loadUserData();
-        
+
         // Find model file
         this.modelPath = this.findModelFile();
-        
+
         // Default model URL (user can change this)
         this.modelUrl = "https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF/resolve/main/hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf";
-       // this.modelUrl = "https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF/blob/main/hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf";
+        // this.modelUrl = "https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF/blob/main/hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf";
     }
 
     getModelsDirectory() {
         const homeDir = os.homedir();
         const platform = os.platform();
-        
+
         if (platform === 'win32') {
             return path.join(homeDir, 'AppData', 'Local', 'KuttAI', 'models');
         } else if (platform === 'darwin') {
@@ -58,22 +58,22 @@ class CLIChatbot {
             fs.mkdirSync(this.modelsDir, { recursive: true });
             return null;
         }
-        
+
         // Look for .gguf files
         const files = fs.readdirSync(this.modelsDir);
         const ggufFiles = files.filter(file => file.endsWith('.gguf'));
-        
+
         if (ggufFiles.length === 0) {
             return null;
         }
-        
+
         // Prioritize the specified model if available
-        const preferredModel = ggufFiles.find(file => 
+        const preferredModel = ggufFiles.find(file =>
             file.includes('ClinIQ-Gemma-2B') || file.includes('hf_mradermacher')
         );
-        
-        return preferredModel ? path.join(this.modelsDir, preferredModel) : 
-                               path.join(this.modelsDir, ggufFiles[0]);
+
+        return preferredModel ? path.join(this.modelsDir, preferredModel) :
+            path.join(this.modelsDir, ggufFiles[0]);
     }
 
     checkInternetConnection() {
@@ -87,16 +87,16 @@ class CLIChatbot {
             }, (res) => {
                 resolve(res.statusCode === 200);
             });
-            
+
             req.on('error', () => {
                 resolve(false);
             });
-            
+
             req.on('timeout', () => {
                 req.destroy();
                 resolve(false);
             });
-            
+
             req.end();
         });
     }
@@ -112,13 +112,13 @@ class CLIChatbot {
 
     async downloadModelWithNpx() {
         console.log("\n📦 Downloading model using npx command...");
-        
+
         try {
             const loadingInterval = this.uiHelper.showLoadingAnimation("Downloading with npx");
-            
+
             // Use the correct URL format for npx command
             const npxModelUrl = "https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF/resolve/main/hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf";
-            
+
             const command = `npx`;
             const args = [
                 '--no',
@@ -128,15 +128,15 @@ class CLIChatbot {
                 this.modelsDir,
                 npxModelUrl
             ];
-            
+
             const child = spawn(command, args, {
                 stdio: 'pipe',
                 shell: true
             });
-            
+
             let stdout = '';
             let stderr = '';
-            
+
             child.stdout.on('data', (data) => {
                 stdout += data.toString();
                 // Parse progress from stdout if possible
@@ -145,22 +145,22 @@ class CLIChatbot {
                     this.uiHelper.updateLoadingAnimation(`Downloading: ${progressMatch[1]}%`);
                 }
             });
-            
+
             child.stderr.on('data', (data) => {
                 stderr += data.toString();
             });
-            
+
             return new Promise((resolve, reject) => {
                 child.on('close', (code) => {
                     this.uiHelper.clearLoadingAnimation();
-                    
+
                     if (code === 0) {
                         console.log("✅ Model downloaded successfully using npx!");
                         resolve(true);
                     } else {
                         console.error(`❌ npx command failed with code ${code}`);
                         console.error(`Error: ${stderr}`);
-                        
+
                         // Check if it's a 404 error
                         if (stderr.includes('404') || stderr.includes('Not Found')) {
                             console.log("\n⚠️  Model URL not found. Trying alternative download methods...");
@@ -170,14 +170,14 @@ class CLIChatbot {
                         }
                     }
                 });
-                
+
                 child.on('error', (error) => {
                     this.uiHelper.clearLoadingAnimation();
                     console.error("❌ Failed to execute npx command:", error.message);
                     reject(error);
                 });
             });
-            
+
         } catch (error) {
             this.uiHelper.clearLoadingAnimation();
             throw error;
@@ -187,42 +187,42 @@ class CLIChatbot {
     // Add a new method for direct HTTP download as fallback
     async downloadModelDirect() {
         console.log("\n📦 Downloading model directly...");
-        
+
         try {
             const loadingInterval = this.uiHelper.showLoadingAnimation("Downloading model");
-            
+
             const modelFilename = "hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf";
             const filePath = path.join(this.modelsDir, modelFilename);
             const file = fs.createWriteStream(filePath);
-            
+
             // Try multiple possible URL formats
             const possibleUrls = [
                 "https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF/resolve/main/hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf",
                 "https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF/blob/main/hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf",
                 "https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF/raw/main/hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf"
             ];
-            
+
             let success = false;
             let lastError = null;
-            
+
             for (const downloadUrl of possibleUrls) {
                 try {
                     console.log(`\n🔄 Trying URL: ${downloadUrl}`);
-                    
+
                     const response = await new Promise((resolve, reject) => {
                         const req = https.get(downloadUrl, (res) => {
                             if (res.statusCode === 200) {
                                 let downloaded = 0;
                                 const totalSize = parseInt(res.headers['content-length'], 10);
-                                
+
                                 res.on('data', (chunk) => {
                                     downloaded += chunk.length;
                                     const percent = Math.round((downloaded / totalSize) * 100);
                                     this.uiHelper.updateLoadingAnimation(`Downloading: ${percent}%`);
                                 });
-                                
+
                                 res.pipe(file);
-                                
+
                                 res.on('end', () => {
                                     file.close();
                                     resolve(true);
@@ -231,30 +231,30 @@ class CLIChatbot {
                                 reject(new Error(`HTTP ${res.statusCode}`));
                             }
                         });
-                        
+
                         req.on('error', reject);
                         req.setTimeout(30000, () => {
                             req.destroy();
                             reject(new Error('Timeout'));
                         });
                     });
-                    
+
                     success = true;
                     break;
-                    
+
                 } catch (error) {
                     lastError = error;
                     console.log(`❌ Failed with URL: ${downloadUrl} (${error.message})`);
-                    
+
                     // Clean up partial download
                     if (fs.existsSync(filePath)) {
                         fs.unlinkSync(filePath);
                     }
                 }
             }
-            
+
             this.uiHelper.clearLoadingAnimation();
-            
+
             if (success) {
                 console.log("✅ Model downloaded successfully!");
                 this.modelPath = path.join(this.modelsDir, modelFilename);
@@ -262,7 +262,7 @@ class CLIChatbot {
             } else {
                 throw new Error(`All download URLs failed: ${lastError?.message}`);
             }
-            
+
         } catch (error) {
             this.uiHelper.clearLoadingAnimation();
             throw error;
@@ -272,32 +272,32 @@ class CLIChatbot {
     // Update the downloadModelWithFallback method
     async downloadModelWithFallback() {
         console.log("\n📦 Model not found. Downloading required model...");
-        
+
         // First check internet connection
         const hasInternet = await this.checkInternetConnection();
         if (!hasInternet) {
             throw new Error("No internet connection available. Please connect to the internet and try again.");
         }
-        
+
         // Check if Node.js is properly installed
         const hasNode = this.checkNodeInstallation();
         if (!hasNode) {
             throw new Error("Node.js is not properly installed. Please install Node.js and try again.");
         }
-        
+
         try {
             // Try using npx method first
             const npxSuccess = await this.downloadModelWithNpx();
             if (npxSuccess) return true;
-            
+
             // If npx failed but didn't reject, try direct download
             console.log("🔄 Trying direct HTTP download...");
             return await this.downloadModelDirect();
-            
+
         } catch (error) {
             this.uiHelper.clearLoadingAnimation();
             console.error("❌ All download methods failed:", error.message);
-            
+
             // Provide detailed instructions for manual download
             console.log("\n💡 Manual download instructions:");
             console.log("1. Visit: https://huggingface.co/mradermacher/ClinIQ-Gemma-2B-v0-hf-GGUF");
@@ -305,7 +305,7 @@ class CLIChatbot {
             console.log("3. Download it and save to:");
             console.log(`   ${this.modelsDir}`);
             console.log("4. Restart KuttAI");
-            
+
             throw new Error("Could not download model automatically. Please download manually.");
         }
     }
@@ -313,35 +313,35 @@ class CLIChatbot {
     async checkModelAvailability() {
         if (!this.modelPath) {
             console.log("❌ No model file found.");
-            
+
             // Try to download the model
             const success = await this.downloadModelWithFallback();
             if (!success) {
                 throw new Error("Model not available and could not be downloaded");
             }
-            
+
             // Update model path after download
             this.modelPath = path.join(this.modelsDir, "hf_mradermacher_ClinIQ-Gemma-2B-v0-hf.IQ4_XS.gguf");
         }
-        
+
         // Check if model file exists
         if (!fs.existsSync(this.modelPath)) {
             console.log(`❌ Model file not found at: ${this.modelPath}`);
-            
+
             // Try to download the model
             const success = await this.downloadModelWithFallback();
             if (!success) {
                 throw new Error("Model not available and could not be downloaded");
             }
         }
-        
+
         console.log(`✅ Using model: ${path.basename(this.modelPath)}`);
         return true;
     }
 
     async initialize() {
         this.uiHelper.showLoadingAnimation("Initializing KuttAI");
-        
+
         // Check model availability
         try {
             await this.checkModelAvailability();
@@ -354,15 +354,15 @@ class CLIChatbot {
             console.log("3. Manually download a model and place it in:");
             console.log(`   ${this.modelsDir}`);
             console.log("4. Supported models: GGUF format from Hugging Face");
-            
+
             // Offer to open the download URL
             console.log("\n🌐 Would you like to open the model download page in your browser? (y/n)");
-            
+
             const rl = readline.createInterface({
                 input: process.stdin,
                 output: process.stdout
             });
-            
+
             rl.question('> ', (answer) => {
                 if (answer.toLowerCase().startsWith('y')) {
                     try {
@@ -377,7 +377,7 @@ class CLIChatbot {
                 rl.close();
                 process.exit(1);
             });
-            
+
             return;
         }
 
@@ -386,11 +386,14 @@ class CLIChatbot {
             this.uiHelper.updateLoadingAnimation("Loading AI engine");
             this.llama = await getLlama();
 
-            // Load the model
+            // Load the model with tokenizer config to fix warning
             this.uiHelper.updateLoadingAnimation("Loading knowledge base");
             this.model = await this.llama.loadModel({
                 modelPath: this.modelPath,
                 gpuLayers: "auto",
+                // Add tokenizer configuration to suppress warning
+                ignoreIllegalTokens: true,
+                vocabOnly: false
             });
 
             // Create context
@@ -413,7 +416,7 @@ class CLIChatbot {
         } catch (error) {
             this.uiHelper.clearLoadingAnimation();
             console.error("❌ Failed to initialize KuttAI:", error.message);
-            
+
             this.uiHelper.displayTroubleshootingTips();
             process.exit(1);
         }
@@ -454,7 +457,7 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
 
         // Store current input
         this.currentInput = '';
-        
+
         // Handle line input (when user presses Enter)
         this.rl.on('line', (input) => {
             this.processInput(input);
@@ -467,16 +470,16 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
         });
 
         // Custom prompt that doesn't interfere with input
-        this.rl.setPrompt(this.uiHelper.gradientText('❯ ', 
-            [this.uiHelper.colors.gradientBlue, this.uiHelper.colors.gradientRed, 
-             this.uiHelper.colors.gradientYellow, this.uiHelper.colors.gradientGreen]));
-        
+        this.rl.setPrompt(this.uiHelper.gradientText('❯ ',
+            [this.uiHelper.colors.gradientBlue, this.uiHelper.colors.gradientRed,
+            this.uiHelper.colors.gradientYellow, this.uiHelper.colors.gradientGreen]));
+
         this.rl.prompt();
     }
 
     processInput(input) {
         const userMessage = input.trim();
-        
+
         // Check for exit commands
         if (this.isExitCommand(userMessage)) {
             this.cleanup();
@@ -514,7 +517,7 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
     filterResponse(response, originalMessage) {
         const lowerResponse = response.toLowerCase();
         const lowerMessage = originalMessage.toLowerCase();
-        
+
         // Pattern matching for different question types
         const patterns = {
             // Identity questions
@@ -526,7 +529,7 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
                 /tell me about yourself/i,
                 /introduce yourself/i
             ],
-            
+
             // EcoCee questions
             ecocee: [
                 /what is ecocee/i,
@@ -534,7 +537,7 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
                 /tell me about ecocee/i,
                 /ecocee\.in/i
             ],
-            
+
             // Technology questions
             technology: [
                 /what (model|technology) do you use/i,
@@ -543,7 +546,7 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
                 /underlying (tech|technology|model)/i
             ]
         };
-        
+
         // Check EcoCee patterns - if asking about EcoCee and internet is available, fetch first
         const isEcoCeeQuestion = patterns.ecocee.some(pattern => pattern.test(originalMessage));
         if (isEcoCeeQuestion) {
@@ -551,32 +554,32 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
             this.fetchEcoCeeContent();
             response = "EcoCee is the development team that created KuttAI! You can visit them at ecocee.in. They built me using an open-source Gemma model from Google DeepMind and customized it specifically for KTU students to help with studies, exams, and university-related queries.";
         }
-        
+
         // Check identity patterns
         const isIdentityQuestion = patterns.identity.some(pattern => pattern.test(originalMessage));
         if (isIdentityQuestion) {
-            if (lowerResponse.includes("google") || lowerResponse.includes("deepmind") || 
+            if (lowerResponse.includes("google") || lowerResponse.includes("deepmind") ||
                 lowerResponse.includes("gemma team") || !lowerResponse.includes("ecocee")) {
                 response = "I'm KuttAI, a CLI tool developed by EcoCee (visit ecocee.in) using an open-source Gemma model from Google DeepMind. I'm specifically designed to help KTU students with their academic needs!";
             }
         }
-        
+
         // Check technology patterns
         const isTechnologyQuestion = patterns.technology.some(pattern => pattern.test(originalMessage));
         if (isTechnologyQuestion) {
             response = "I'm powered by an open-source Gemma model from Google DeepMind, but I've been customized and developed by EcoCee (ecocee.in) specifically for KTU students. KuttAI is the interface that makes this technology accessible for your academic needs!";
         }
-        
+
         // Fix any remaining Gemma references in identity contexts
         if ((isIdentityQuestion || lowerMessage.includes("name")) && lowerResponse.includes("gemma")) {
             response = response.replace(/gemma/gi, "KuttAI");
             response = response.replace(/my name is/gi, "I'm");
-            
+
             if (!response.includes("EcoCee") || !response.includes("ecocee.in")) {
                 response = response + " I was developed by EcoCee (ecocee.in) using Google's Gemma technology.";
             }
         }
-        
+
         return response;
     }
 
@@ -605,7 +608,7 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
         } catch (error) {
             console.log("⚠️  Could not load user data, starting fresh");
         }
-        
+
         return {
             name: "",
             semester: "",
@@ -625,7 +628,8 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
     }
 
     async handleChatMessage(message) {
-        const thinkingInterval = this.uiHelper.showThinkingAnimation();
+        //const thinkingInterval = this.uiHelper.showThinkingAnimation();
+        const typingInterval = this.uiHelper.showTypingAnimation();
 
         try {
             // Check if this is about EcoCee and fetch content if needed
@@ -635,42 +639,77 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
 
             // Get context from scraped data if available
             const context = this.webScraper.getContextForQuery(message);
-            
+
+
             let fullMessage = message;
             if (context) {
                 fullMessage += `\n\nContext from KTU websites:\n${context}`;
             }
 
+
             // Add user profile context
             fullMessage += `\n\nUser profile: ${JSON.stringify(this.userData)}`;
 
-            // Generate response
-            let response = await this.session.prompt(fullMessage, {
+            // Clear typing animation and show AI name
+            clearInterval(typingInterval);
+            process.stdout.write('\r\x1b[K');
+
+            // Display AI response header with gradient styling
+            const aiName = this.uiHelper.gradientText("(っᵔ◡ᵔ)っ KuttAI",
+              [this.uiHelper.colors.gradientGreen, this.uiHelper.colors.gradientYellow, this.uiHelper.colors.gradientRed, this.uiHelper.colors.gradientBlue]);
+            process.stdout.write(`${aiName}: `);
+
+            // Stream the response with token-by-token output
+            let fullResponse = '';
+            let isFirstToken = true;
+
+
+            await this.session.prompt(fullMessage, {
                 temperature: 0.7,
                 topP: 0.9,
                 maxTokens: 512,
+                onTextChunk: (chunk) => {
+                    // Add slight delay for streaming effect
+                    if (isFirstToken) {
+                        isFirstToken = false;
+                        // Small delay before first token
+                        setTimeout(() => {
+                            process.stdout.write(chunk);
+                        }, 100);
+                    } else {
+                        // Simulate typing speed
+                        setTimeout(() => {
+                            process.stdout.write(chunk);
+                        }, Math.random() * 50 + 20); // Random delay 20-70ms
+                    }
+                    fullResponse += chunk;
+                }
             });
 
-            // Apply response filters to fix known issues
-            response = this.filterResponse(response, message);
+            // Apply response filters after streaming is complete
+            fullResponse = this.filterResponse(fullResponse, message);
+
+            // If response was filtered significantly, clear and reprint
+            if (fullResponse.length !== fullResponse.length) {
+                process.stdout.write('\r\x1b[K'); // Clear line
+                process.stdout.write(`${aiName}: ${fullResponse}`);
+            }
 
             // If we have EcoCee content and the question is about EcoCee, enhance the response
             if (message.toLowerCase().includes("ecocee")) {
                 const ecoceeData = this.webScraper.getScrapedData("https://ecocee.in");
                 if (ecoceeData) {
-                    response = this.enhanceWithEcoCeeContent(response, ecoceeData);
+                    const enhancedResponse = this.enhanceWithEcoCeeContent(fullResponse, ecoceeData);
+                    if (enhancedResponse !== fullResponse) {
+                        process.stdout.write('\r\x1b[K'); // Clear line
+                        process.stdout.write(`${aiName}: ${enhancedResponse}`);
+                    }
                 }
             }
 
-            // Clear thinking animation
-            clearInterval(thinkingInterval);
-            process.stdout.write('\r\x1b[K');
-
-            // Display response with styling
-            console.log(`\x1b[35m🤖 KuttAI\x1b[0m: ${response}\n`);
-
+            console.log('\n'); // New line after response
         } catch (error) {
-            clearInterval(thinkingInterval);
+            clearInterval(typingInterval);
             process.stdout.write('\r\x1b[K');
             console.error("❌ Error generating response:", error.message);
         } finally {
@@ -692,10 +731,10 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
         if (this.rl) {
             this.rl.close();
         }
-        
+
         console.log("🔄 Saving your data...");
         this.saveUserData();
-        
+
         try {
             if (this.session) {
                 await this.session.dispose?.();
@@ -712,28 +751,28 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
         } catch (error) {
             console.log("⚠️  Cleanup warning:", error.message);
         }
-        
+
         console.log("✅ Cleanup complete. Goodbye!");
         process.exit(0);
     }
 
     async start() {
         this.uiHelper.displayWelcome();
-        
+
         // First time setup
         if (this.userData.firstTime) {
             await this.setupUserProfile();
             this.userData.firstTime = false;
             this.saveUserData();
         }
-        
+
         await this.initialize();
         this.setupReadline();
     }
 
     async setupUserProfile() {
         console.log("\n📝 Let's set up your KuttAI profile!");
-        
+
         const askQuestion = (query) => {
             return new Promise((resolve) => {
                 const rl = readline.createInterface({
@@ -746,12 +785,12 @@ Always identify yourself as KuttAI, developed by EcoCee.`;
                 });
             });
         };
-        
+
         this.userData.name = await askQuestion("What's your name? ");
         this.userData.semester = await askQuestion("Which semester are you in? ");
         this.userData.branch = await askQuestion("What's your branch? ");
         this.userData.interests = await askQuestion("What are your academic interests? ");
-        
+
         console.log("✅ Profile setup complete!\n");
     }
 }

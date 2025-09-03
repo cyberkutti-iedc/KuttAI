@@ -145,6 +145,31 @@ class UIHelper {
         }
     }
 
+    // Add this new method to your UIHelper class in uiHelper.js
+// Insert this method after the existing showThinkingAnimation method
+
+showTypingAnimation(message = "KuttAI is typing") {
+    const frames = ['⌨️ ', '✍️ ', '💭 ', '🤖 '];
+    const dots = ['', '.', '..', '...'];
+    let i = 0;
+    let j = 0;
+    
+    const interval = setInterval(() => {
+        const gradientFrame = this.gradientText(frames[i], 
+            [this.colors.gradientBlue, this.colors.gradientRed]);
+        const gradientDots = this.gradientText(dots[j], 
+            [this.colors.gradientYellow, this.colors.gradientGreen]);
+        process.stdout.write(`\r${gradientFrame} ${this.colors.magenta}${message}${gradientDots}${this.colors.reset}`);
+        
+        i = (i + 1) % frames.length;
+        if (i === 0) {
+            j = (j + 1) % dots.length;
+        }
+    }, 200); // Slower animation for typing effect
+    
+    return interval;
+}
+
     showThinkingAnimation(message = "KuttAI is thinking") {
         const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
         let i = 0;

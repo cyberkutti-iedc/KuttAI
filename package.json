@@ -1,18 +1,16 @@
 {
   "name": "kuttai",
-  "version": "1.0.2",
-  "description": "AI chatbot assistant for KTU students developed and maintained by EcoCee",
-  "type": "module",
+  "version": "1.1.0",
+    "description": "AI chatbot assistant for KTU students developed by EcoCee",
   "main": "index.js",
+  "type": "module",
   "bin": {
-    "kuttai": "index.js"
+    "kuttai": "./index.js"
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "NODE_ENV=development node index.js",
-    "lint": "eslint .",
-    "test": "echo \"No tests specified\" && exit 0",
-    "prepare": "npm run lint"
+    "prepublishOnly": "npm test",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "keywords": [
     "ktu",
@@ -55,8 +53,5 @@
     "node-fetch": "^3.3.2",
     "node-llama-cpp": "^3.12.1",
     "open": "^9.1.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.57.1"
   }
 }

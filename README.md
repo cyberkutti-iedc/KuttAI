@@ -31,6 +31,8 @@ KuttAI is a beautiful, modern command-line interface AI chatbot designed specifi
 | 🔒 **Privacy First** | All data stored locally on your machine |
 | 🎯 **Smart Context** | Understands context from previous conversations |
 | 📊 **System Integration** | Displays relevant system information |
+| ⚡ **GPU Optimization** | Automatically detects GPU and uses it for faster model inference |
+
 
 
 ## 🚀 Quick Start
@@ -96,7 +98,7 @@ node index.js
 ### Example Interaction
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                              KuttAI CLI v1.0.0                               │
+│                              KuttAI CLI v1.1.0                               │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │ You: What are the important topics for CS2040?                               │
 │                                                                              │
@@ -114,6 +116,17 @@ node index.js
 <div align="center">
   <img src="/public/demo.png" alt="Interactive Demo" width="600"/>
 </div>
+
+### Current Version: v1.1.0
+- ✅ Streaming output for real-time responses
+- ✅ Improved animations and typewriter effects
+- ✅ Tokenizer fixes
+- ✅ GPU layer auto-detection
+- ✅ Beautiful terminal UI with gradient colors
+- ✅ Local AI model integration
+- ✅ KTU-specific knowledge base
+- ✅ Student profile system
+- ✅ Conversation history
 
 ## 🎨 UI/UX Features
 
