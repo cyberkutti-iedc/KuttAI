@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Upcoming features, bug fixes, and improvements.
 
 ---
+## [1.0.2] - 2025-09-03
+### Added
+- **funding.json** to allow community support via UPI  
+- Documentation improvements for Ecocee’s mission and funding  
+
+### Changed
+- Updated project description to clarify open-source + product development goals  
+
+---
 
 ## [1.0.2] - 2025-09-03
 ### Added

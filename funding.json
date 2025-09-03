@@ -1,0 +1,70 @@
+{
+  "version": "v1.0.0",
+  "entity": {
+    "type": "organisation",
+    "role": "owner",
+    "name": "Ecocee",
+    "email": "info@eccoee.in",
+    "phone": "+919446715884",
+    "description": "Ecocee is a startup founded by Sreeraj V Rajesh, building AI and embedded system solutions. Our mission combines open-source contributions (like KuttAI) with custom product development for customers, creating scalable tools and solutions. Currently, we are operating with zero revenue and very limited hardware (Intel 4th-gen laptop, 4GB RAM). We are seeking one-time support to purchase a high-performance laptop (MacBook Pro or RTX series laptop) to accelerate the development of both open-source projects and customer-focused products that benefit students, industries, and developers worldwide.",
+    "webpageUrl": {
+      "url": "https://ecocee.in",
+      "wellKnown": "https://github.com/cyberkutti-iedc/kodeai"
+    }
+  },
+  "projects": [
+    {
+      "guid": "kuttai",
+      "name": "KuttAI",
+      "description": "KuttAI is a beautiful, modern command-line interface AI chatbot designed specifically for KTU students. With its stunning gradient-colored interface and powerful AI capabilities, KuttAI provides intelligent assistance for studies, exams, and all things related to the KTU ecosystem.",
+      "webpageUrl": {
+        "url": "https://ecocee.in/kuttai",
+        "wellKnown": "https://github.com/cyberkutti-iedc/kodeai"
+      },
+      "repositoryUrl": {
+        "url": "https://github.com/cyberkutti-iedc/kodeai"
+      },
+      "licenses": [
+        "spdx:AGPL-3.0"
+      ],
+      "tags": [
+        "\"education\"",
+        "\"machine-learning\"",
+        "\"artificial-intelligence\"",
+        "\"developer-tools\""
+      ]
+    }
+  ],
+  "funding": {
+    "channels": [
+      {
+        "guid": "upi-support",
+        "type": "payment-provider",
+        "address": "upi://sreerajvrajesg78@okicici",
+        "description": "Support Ecocee directly via UPI to help us purchase a development laptop."
+      }
+    ],
+    "plans": [
+      {
+        "guid": "hardware-upgrade",
+        "status": "active",
+        "name": "Laptop Upgrade Fund",
+        "description": "One-time support to purchase a high-performance laptop (Apple MacBook Pro or RTX-based laptop). This hardware will power the development of multiple AI and embedded projects under Ecocee.",
+        "amount": 200000,
+        "currency": "INR",
+        "frequency": "one-time",
+        "channels": [
+          "upi-support"
+        ]
+      }
+    ],
+    "history": [
+      {
+        "year": 2025,
+        "expenses": 100,
+        "currency": "INR",
+        "description": "Ecocee is in early stage with no funding or revenue. Current development happens on limited hardware."
+      }
+    ]
+  }
+}
