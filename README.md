@@ -255,13 +255,6 @@ Ownership remains with **Sreeraj V Rajesh & EcoCee**. Contributions are welcome 
 - [ ] **Cloud Sync** - Sync your preferences across devices
 - [ ] **Advanced Study Planner** - Intelligent study schedule generator
 
-### Current Version: v1.0.0
-- ✅ Beautiful terminal UI with colors and animations
-- ✅ Local AI model integration
-- ✅ KTU-specific knowledge base
-- ✅ Student profile system
-- ✅ Conversation history
-
 <div align="center">
   
 ---
