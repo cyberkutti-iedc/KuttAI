@@ -28,10 +28,10 @@
         "spdx:AGPL-3.0"
       ],
       "tags": [
-        "\"education\"",
-        "\"machine-learning\"",
-        "\"artificial-intelligence\"",
-        "\"developer-tools\""
+       "education",
+  "machine-learning",
+  "artificial-intelligence",
+  "developer-tools"
       ]
     }
   ],
@@ -69,4 +69,5 @@
   }
 
 }
+
 
