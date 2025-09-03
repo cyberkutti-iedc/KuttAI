@@ -22,7 +22,7 @@
       "wellKnown": "https://github.com/cyberkutti-iedc/kuttai/blob/main/.well-known/funding-manifest-urls"
     },
       "repositoryUrl": {
-        "url": "https://github.com/cyberkutti-iedc/kodeai"
+        "url": "https://github.com/cyberkutti-iedc/kottai"
       },
       "licenses": [
         "spdx:AGPL-3.0"
@@ -69,5 +69,6 @@
   }
 
 }
+
 
 
