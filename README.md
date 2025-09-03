@@ -2,7 +2,8 @@
 
 ![KuttAI Banner](https://img.shields.io/badge/KuttAI-Revolutionizing%20Student%20Learning-blue?style=for-the-badge&logo=ai)
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green?style=for-the-badge&logo=node.js)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+![License](https://img.shields.io/badge/License-EcoCee--OpenSource-orange?style=for-the-badge)
+
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=for-the-badge)
 
 <div align="center">
@@ -180,13 +181,12 @@ npm run build
 - 🎨 UI/UX enhancements
 - 🔧 Performance optimizations
 
-Please read our [Contributing Guidelines](./docs/Contributing.md) for more details.
-
-
+Please read our [Contributing Guidelines](./docs/Contributing.md), [CLA](CLA.md), and [Code of Conduct](./docs/CODE_OF_CONDUCT.md) before contributing.
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **EcoCee-OpenSource License** – see [LICENSE](LICENSE) for details.
+Ownership remains with **Sreeraj V Rajesh & EcoCee**. Contributions are welcome under the CLA.
 
 ## 🙏 Acknowledgments
 

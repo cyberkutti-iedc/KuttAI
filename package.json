@@ -1,16 +1,18 @@
 {
   "name": "kuttai",
-  "version": "1.0.0",
-  "description": "AI chatbot assistant for KTU students developed by EcoCee",
-  "main": "index.js",
+  "version": "1.0.2",
+  "description": "AI chatbot assistant for KTU students developed and maintained by EcoCee",
   "type": "module",
+  "main": "index.js",
   "bin": {
-    "kuttai": "./index.js"
+    "kuttai": "index.js"
   },
   "scripts": {
     "start": "node index.js",
-    "prepublishOnly": "npm test",
-    "test": "echo \"No tests specified\" && exit 0"
+    "dev": "NODE_ENV=development node index.js",
+    "lint": "eslint .",
+    "test": "echo \"No tests specified\" && exit 0",
+    "prepare": "npm run lint"
   },
   "keywords": [
     "ktu",
@@ -20,33 +22,41 @@
     "assistant",
     "education",
     "notes",
-    "ecocee"
+    "ecocee",
+    "opensource"
   ],
-  "author": "EcoCee <info@ecocee.in>",
-  "license": "MIT",
+  "author": "Sreeraj V Rajesh (EcoCee) <info@ecocee.in>",
+  "license": "EcoCee-OpenSource",
   "homepage": "https://github.com/cyberkutti-iedc/kuttai#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cyberkutti-iedc/kuttai.git"
+    "url": "git+https://github.com/cyberkutti-iedc/kuttai.git"
   },
   "bugs": {
     "url": "https://github.com/cyberkutti-iedc/kuttai/issues"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "files": [
     "index.js",
     "chatbot.js",
     "src/",
+    "docs/",
+    "public/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md"
   ],
   "dependencies": {
-    "cheerio": "^1.1.2",
-    "dotenv": "^17.2.1",
-    "node-fetch": "^2.7.0",
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^3.3.2",
     "node-llama-cpp": "^3.12.1",
-    "open": "^8.4.2"
+    "open": "^9.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1"
   }
 }
