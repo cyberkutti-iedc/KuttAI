@@ -41,7 +41,7 @@ This Code of Conduct applies in all **project spaces**, including:
 
 ## Enforcement
 If you experience or witness unacceptable behavior:
-- Report it to the maintainer at **sreeraj@ecocee.in**  
+- Report it to the maintainer at **cyberkutti@gmail.com**  
 - All complaints will be reviewed and addressed fairly  
 - The maintainer is committed to protecting reporters’ privacy  
 
@@ -64,3 +64,4 @@ This Code of Conduct is adapted from the **Contributor Covenant v2.1** with modi
 Ecocee – Sreeraj V Rajesh  
 📧 cyberkutti@gmail.com 
 🌐 https://ecocee.in
+
